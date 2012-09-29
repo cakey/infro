@@ -1,0 +1,29 @@
+[
+    {
+        "byte_out": 500,
+        "byte_in": 500,
+        "duration": 2000,
+        "to": "webservice",
+        "request": "/my/url",
+        "response_code": 500,
+        "time": 123123123
+     },
+         {
+        "byte_out": 5000,
+        "byte_in": 5000,
+        "duration": 20000,
+        "to": "webserv0ice",
+        "request": "/my/u0rl",
+        "response_code": 5000,
+        "time": 123123123
+     },
+         {
+        "byte_out": 50,
+        "byte_in": 50,
+        "duration": 200,
+        "to": "webservce",
+        "request": "/my/rl",
+        "response_code": 00,
+        "time": 12312123
+     }
+]
