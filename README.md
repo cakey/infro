@@ -1,5 +1,7 @@
 # Infro
 
+### Basic Demo: http://cakey.github.com/infro/
+
 Infro is a Javascript library that uses the excellent D3 library to help drill into tabular data sets to find inconsistencies and anomalies.
 It provides an interface to filter on both discrete and continuous aspects of the data, while visualising metrics on that data.
 
