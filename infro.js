@@ -383,7 +383,7 @@ var infro = (function () {
          var metric = ranges[i][0],
              bound  = ranges[i][1];
          if (value < bound){
-            return value+metric;
+            return (Math.round(value * 10) / 10 )+metric;
          }
          value /= bound;
       }
