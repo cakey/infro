@@ -1064,12 +1064,16 @@ var infro = (function () {
             .style("left", filter_width_padding/2+"px")
             .style("top", filter_height_padding/2+"px");
             
-      /* helper accessors */
-      var discrete_groups = filterables_group.selectAll("div.discrete").selectAll(".f_content")
-         .call(render_discrete_pre_filter_groups);
-         
-      var continuous_groups = filterables_group.selectAll("div.continuous").selectAll(".f_content")
-         .call(render_continuous_pre_filter_groups).width();
+
+      if (num_filterables > 0){
+
+         /* helper accessors */
+         var discrete_groups = filterables_group.selectAll("div.discrete").selectAll(".f_content")
+            .call(render_discrete_pre_filter_groups);
+            
+         var continuous_groups = filterables_group.selectAll("div.continuous").selectAll(".f_content")
+            .call(render_continuous_pre_filter_groups);
+      }
    };
 
    var render_tab_bar = function(tab_group, content_group){
