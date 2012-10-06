@@ -17,7 +17,10 @@
    
       infro.init({
          root_div: "visualisation",
-         data_url: "data.json",
+         data: {
+            type: "json"
+            url: "data.json"
+         },
          formatters: {},
          unit: "Requests",
          topx: 4,
