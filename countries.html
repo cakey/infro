@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8" />
+      <title>Infro</title>
+      <script src="http://d3js.org/d3.v2.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/mootools-1.4.5.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/mootools-more-1.4.0.1.js"></script> 
+      <script src="https://raw.github.com/cakey/infro/master/chosen/chosen.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/infro.js"></script>
+      <link rel="stylesheet" href="infro.css" type="text/css" />
+      <link rel="stylesheet" href="chosen.css" type="text/css" />
+   </head>
+   <body>
+   <div id="visualisation"></div>
+   <script>
+   
+      infro.init({
+         root_div: "visualisation",
+         data: {
+            type: "csv"
+            url: "https://raw.github.com/enjalot/Bay-Area-d3/master/data/HDR_2011_cleaned.csv"
+         },
+         formatters: {},
+         unit: "Requests",
+         topx: 4,
+         more_info_url: "/moreinfo/?id={{{id}}}",
+         metrics:{
+            "Rel Std Dev":  function(x) {
+                 var n = x.length;
+                 if (n < 1) return NaN;
+                 if (n === 1) return 0;
+                 var mean = d3.mean(x),
+                     i = -1,
+                     s = 0;
+                 while (++i < n) {
+                   var v = x[i] - mean;
+                   s += v * v;
+                 }
+                 return Math.sqrt(s / (n - 1))/mean;
+               },
+         
+         
+         
+            "Std Dev": function(x) {
+                 var n = x.length;
+                 if (n < 1) return NaN;
+                 if (n === 1) return 0;
+                 var mean = d3.mean(x),
+                     i = -1,
+                     s = 0;
+                 while (++i < n) {
+                   var v = x[i] - mean;
+                   s += v * v;
+                 }
+                 return Math.sqrt(s / (n - 1));
+               }
+         },
+         filterables: {
+            byte_out:{
+               human: "Bytes out",
+               format: infro.formatters.data_size,
+               type: "continuous",
+               aggregable: true,
+               scale: infro.scales.log
+            },
+            byte_in:{
+               human: "Bytes in",
+               format: infro.formatters.data_size,
+               type: "continuous",
+               aggregable: true,
+               scale: infro.scales.log
+            },
+            duration:{
+               human: "Response Time",
+               format: infro.formatters.duration, /* assumes ms base */
+               type: "continuous",
+               aggregable: true,
+               scale: infro.scales.log
+            },
+            to:{
+               human: "Node",
+               type: "discrete"
+            },
+            request:{
+               human: "Url Path",
+               type: "discrete"
+            },
+            response_code:{
+               human: "Response Code",
+               type: "discrete"
+            },
+            time:{
+               human: "Timestamp",
+               format: function(time){return d3.time.format("%b %d %H:%M:%S %Y")(new Date(time*1000))},
+               type: "continuous",
+               scale: infro.scales.time,
+            }
+         }
+      });
+   </script>
+   </body>
+</html>
