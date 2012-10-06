@@ -41,47 +41,25 @@
                }
          },
          filterables: {
-          /*
-            byte_out:{
-               human: "Bytes out",
-               format: infro.formatters.data_size,
+          
+            Country:{
+               type: "discrete",
+            },
+            "HD rank":{
                type: "continuous",
-               aggregable: true,
-               scale: infro.scales.log
+               scale: infro.scales.linear
             },
-            byte_in:{
-               human: "Bytes in",
-               format: infro.formatters.data_size,
+            
+            Subregion:{
+               type: "discrete",
+            },
+            Region:{
+               type: "discrete",
+            },
+            "Life expectancy":{
                type: "continuous",
-               aggregable: true,
-               scale: infro.scales.log
-            },
-            duration:{
-               human: "Response Time",
-               format: infro.formatters.duration,
-               type: "continuous",
-               aggregable: true,
-               scale: infro.scales.log
-            },
-            to:{
-               human: "Node",
-               type: "discrete"
-            },
-            request:{
-               human: "Url Path",
-               type: "discrete"
-            },
-            response_code:{
-               human: "Response Code",
-               type: "discrete"
-            },
-            time:{
-               human: "Timestamp",
-               format: function(time){return d3.time.format("%b %d %H:%M:%S %Y")(new Date(time*1000))},
-               type: "continuous",
-               scale: infro.scales.time,
-            }
-            */
+               scale: infro.scales.linear
+            }            
          }
 
       });
