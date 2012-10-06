@@ -24,24 +24,8 @@
          formatters: {},
          unit: "Requests",
          topx: 4,
-         more_info_url: "/moreinfo/?id={{{id}}}",
+         more_info_url: "http://en.wikipedia.org/wiki/{{{Country}}}",
          metrics:{
-            "Rel Std Dev":  function(x) {
-                 var n = x.length;
-                 if (n < 1) return NaN;
-                 if (n === 1) return 0;
-                 var mean = d3.mean(x),
-                     i = -1,
-                     s = 0;
-                 while (++i < n) {
-                   var v = x[i] - mean;
-                   s += v * v;
-                 }
-                 return Math.sqrt(s / (n - 1))/mean;
-               },
-         
-         
-         
             "Std Dev": function(x) {
                  var n = x.length;
                  if (n < 1) return NaN;
@@ -57,6 +41,7 @@
                }
          },
          filterables: {
+          /*
             byte_out:{
                human: "Bytes out",
                format: infro.formatters.data_size,
@@ -73,7 +58,7 @@
             },
             duration:{
                human: "Response Time",
-               format: infro.formatters.duration, /* assumes ms base */
+               format: infro.formatters.duration,
                type: "continuous",
                aggregable: true,
                scale: infro.scales.log
@@ -96,7 +81,9 @@
                type: "continuous",
                scale: infro.scales.time,
             }
+            */
          }
+
       });
    </script>
    </body>
