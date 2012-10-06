@@ -54,28 +54,15 @@ An example initialisation may be:
    
       infro.init({
          root_div: "visualisation",
-         data_url: "/my/route/to/data.json",
+         data: {
+            type: "json",
+            url: "/my/route/to/data.json"
+         },
          formatters: {},
          unit: "Requests",
          topx: 4,
          more_info_url: "/moreinfo/?id={{{id}}}",
          metrics:{
-            "Rel Std Dev":  function(x) {
-                 var n = x.length;
-                 if (n < 1) return NaN;
-                 if (n === 1) return 0;
-                 var mean = d3.mean(x),
-                     i = -1,
-                     s = 0;
-                 while (++i < n) {
-                   var v = x[i] - mean;
-                   s += v * v;
-                 }
-                 return Math.sqrt(s / (n - 1))/mean;
-               },
-         
-         
-         
             "Std Dev": function(x) {
                  var n = x.length;
                  if (n < 1) return NaN;
