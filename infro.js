@@ -701,9 +701,10 @@ var infro = (function () {
             .style("top", 10+"px")
             .style("left", 10+"px")
             .attr("src", "images/icon-config.png"); // TODO: use css
-   }
+   };
 
-      var col = function(key, i){ /* hacky helper for column position */
+   /* hacky helper for column position */
+   var col = function(key, i){ 
          var font_size = 12;
          var columns_to_show = selects[display_units].current.slice();
          if (user_config.more_info_url){
@@ -722,7 +723,7 @@ var infro = (function () {
                      show: columns_to_show,
                      cumu: cumu
                      }
-      };
+   };
    
    var render_units = function(units_group_wrapper){
 
@@ -866,7 +867,7 @@ var infro = (function () {
             .style("user-select", "none")
             .style("cursor", "pointer")
             .classed("searched_col",  function(c){return units_search !== null && String(c.formatted_value).contains(units_search)});
-   }
+   };
 
    var render_filters = function(filters_group){
       
@@ -1795,80 +1796,91 @@ var infro = (function () {
    var init_visualisation = function(config){
       user_config = config;
 
-      d3.json(
-         user_config.data_url,
-         function(data){
-            d3.select(window).on("resize",render_visualisation);
+      var on_data = function(data){
+         d3.select(window).on("resize",render_visualisation);
 
-            /* replace empty string with null to allow filtering/visibility */
-            var user_data = data.map(function(row){
-               for (var col in row){
-                  if (row[col] === ""){
-                     row[col] = "null";
-                  };
-               }
-               return row;
-            });
-            
-            data_filter = new FilterHolder(user_data, user_config.filterables, infro_unit, d3.sum)
-               .on_change(function(){
-               /* if all filters selected, then switch to the connections page */
-               if (data_filter.filters().length >= selects.display_units.current.length){
-                  tabs.content.set(display_units+"_tab_wrapper");
-               }
-               cached_distributions = {};
-               render_visualisation();
-            });
-            
-            var standard_metrics = {"Total":d3.sum,
-                                                   "Max":d3.max,
-                                                   "Min":d3.min,
-                                                   "Mean":d3.mean
-                                                 }
-            var extra_metrics = config.metrics;
-            
-            var all_metrics = d3.entries(standard_metrics).concat(d3.entries(extra_metrics))
-                                          .map(function(m){return {key:m.value, value:{human:m.key}};});
-            
-            var fields = data_filter.metrics().map(function(key){return {key:key, value:{human:data_filter.human(key)}}});
-
-            var unit = {key:infro_unit, value:{human: user_config.unit}};
-            fields.push(unit);
-            selects = {metric: new Select(fields, unit.key, "Select the metric you are interested in exploring.")
-                                       .on_change(data_filter.set_metric),
-                        aggreg: new Select(all_metrics, d3.sum, "Select the method of aggregating the data together.")
-                                       .on_change(data_filter.set_aggregation)
-                     };
-                                                
-            selects[display_units] = new Select(data_filter.fields().map(function(key){return {key:key, value:{human:data_filter.human(key)}}}),
-                                             data_filter.filterables(),
-                                             "Select the columns you wish to display on the units page.",
-                                             user_config.unit+' fields')
-                                                .on_change(render_visualisation);
-            tabs = {content: new TabSet(
-                           [
-                              {key:"filterables", value:{human:"Filters", content:render_filterables}},
-                              {key:display_units+"_tab_wrapper", value:{human:user_config.unit, content:render_units}}
-                            ],
-                            "filterables"),
-                        };
-                                                
-            var columns = data_filter.fields();
-            /* calculate the max (bounded) length of each field to use renedering the units page */
-            var _data_ = data_filter.apply();
-            columns.forEach(function(key){
-               column_lengths[key] = d3.max([data_filter.human(key).length, 
-                                        d3.min([
-                                                d3.max(pull_out_field(_data_, key).map(function(value){
-                                                   return String(data_filter.format(key, value)).length;
-                                                   })),
-                                                60])
-                                       ]);
-            });
-            
-            render_visualisation(); 
+         /* replace empty string with null to allow filtering/visibility */
+         var user_data = data.map(function(row){
+            for (var col in row){
+               if (row[col] === ""){
+                  row[col] = "null";
+               };
+            }
+            return row;
+         });
+         
+         data_filter = new FilterHolder(user_data, user_config.filterables, infro_unit, d3.sum)
+            .on_change(function(){
+            /* if all filters selected, then switch to the data page */
+            if (data_filter.filters().length >= selects.display_units.current.length){
+               tabs.content.set(display_units+"_tab_wrapper");
+            }
+            cached_distributions = {};
+            render_visualisation();
+         });
+         
+         var standard_metrics = {
+               "Total":d3.sum,
+               "Max":d3.max,
+               "Min":d3.min,
+               "Mean":d3.mean
          }
-      );      
+         var extra_metrics = config.metrics;
+         
+         var all_metrics = d3.entries(standard_metrics).concat(d3.entries(extra_metrics))
+                                       .map(function(m){return {key:m.value, value:{human:m.key}};});
+         
+         var fields = data_filter.metrics().map(function(key){return {key:key, value:{human:data_filter.human(key)}}});
+
+         var unit = {key:infro_unit, value:{human: user_config.unit}};
+         fields.push(unit);
+         selects = {
+            metric: new Select(
+               fields, 
+               unit.key, 
+               "Select the metric you are interested in exploring."
+            ).on_change(data_filter.set_metric),
+            aggreg: new Select(
+               all_metrics, 
+               d3.sum, 
+               "Select the method of aggregating the data together."
+            ).on_change(data_filter.set_aggregation)
+         };
+                                             
+         selects[display_units] = new Select(
+            data_filter.fields().map(function(key){
+               return {key:key, value:{human:data_filter.human(key)}}
+            }),
+            data_filter.filterables(),
+            "Select the columns you wish to display on the units page.",
+            user_config.unit+' fields'
+         ).on_change(render_visualisation);
+
+         tabs = {
+            content: new TabSet(
+               [
+                  {key:"filterables", value:{human:"Filters", content:render_filterables}},
+                  {key:display_units+"_tab_wrapper", value:{human:user_config.unit, content:render_units}}
+                ],
+                "filterables"),
+         };
+                                             
+         var columns = data_filter.fields();
+         /* calculate the max (bounded) length of each field to use rendering the units page */
+         var _data_ = data_filter.apply();
+         columns.forEach(function(key){
+            column_lengths[key] = d3.max([data_filter.human(key).length, 
+                                     d3.min([
+                                             d3.max(pull_out_field(_data_, key).map(function(value){
+                                                return String(data_filter.format(key, value)).length;
+                                                })),
+                                             60])
+                                    ]);
+         });
+         
+         render_visualisation(); 
+      }
+      d3[user_config.data.type](user_config.data.url, on_data);      
    };
    
    var exposed_methods =  {
