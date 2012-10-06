@@ -32,7 +32,9 @@ infro.init(config_object)
 
 Where config_object has the following allowed properties.
  * root_div (the id of the div to place the visualisation in)
- * data_url (the url that returns the JSON data that the visualisation will use)
+ * data (is an object with two properties providing information about the data source:
+  * type: the format the data is in, options are currently "tsv", "csv", and json (ie any 'helper' GET methods that d3 implements...)
+  * url: the url that returns the JSON data that the visualisation will use
  * unit (the human readable name for each row of data)
  * topx (the number of discrete bars to show in the filterable box)
  * more_info_url (a url that the table links to that can provide more detailed information on that particular object - you parameterise this by including any data field by 3 braces, for example, if 'id' was a key in your data then something like moreinfro/?id={{{id}}} could be used. )
