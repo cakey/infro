@@ -472,8 +472,8 @@ var infro = (function () {
                cache that result
                if data is continious, then also guess that the scale is linear
             */
-            num = 0.0;
-            key_data = pull_out_field(_data, key);
+            var num = 0.0;
+            var key_data = pull_out_field(_data, key);
             key_data.forEach(function(n){
                if (is_numeric(n)){
                   num++;
