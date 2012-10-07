@@ -827,7 +827,7 @@ var infro = (function () {
       var searched_rows = units_search===null?formatted_rows:
          formatted_rows.filter(function(row){
             return row.some(function(col){
-               return String(col.formatted_value).contains(units_search);
+               return String(col.formatted_value.toLowerCase()).contains(units_search.toLowerCase());
             })
          });
          
@@ -866,7 +866,7 @@ var infro = (function () {
             .style("font-size", font_size+"px")
             .style("user-select", "none")
             .style("cursor", "pointer")
-            .classed("searched_col",  function(c){return units_search !== null && String(c.formatted_value).contains(units_search)});
+            .classed("searched_col",  function(c){return units_search !== null && String(c.formatted_value).toLowerCase().contains(units_search.toLowerCase())});
    };
 
    var render_filters = function(filters_group){
