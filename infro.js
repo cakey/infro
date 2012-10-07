@@ -970,6 +970,7 @@ var infro = (function () {
 
    var render_continuous_post_filter_groups = function(selection){
       var no_bins = 40;
+      console.log(selection);
       var bin_width = Math.floor(selection.width()/no_bins);
       
       var histogram_groups = data_bind(selection,
@@ -1189,20 +1190,13 @@ var infro = (function () {
             return {bar:bar, xscale:d.xscale, yscale:d.yscale, bin_width:d.bin_width};
          });
       })
-         .attr("width", function(d){return d.bin_width-2;})
+         .attr("width", function(d){return d3.max([d.bin_width-2,0]);})
          .attr("height", function(d){return d3.max([0,hist_gr.height()-d.yscale(d.bar.y)])-(post?0:20);;})
          .attr("x", function(d,i){return i*d.bin_width+1;})
          .attr("y", function(d){return d.yscale(d.bar.y)+(post?0:20);});
          
       /* create the axis */
       var axis = data_bind(cont, "g", "axis", function(f){return [f.axis];})
-             .attr("transform", function(d,i){
-               if (post){
-                  return 'translate(0,0)';
-               }else{
-                  return 'translate(0,0)';
-               }
-            })
              .each(function(axis){d3.select(this).call(axis);});
           axis.selectAll("text")
             .classed("axis_text", "true")
