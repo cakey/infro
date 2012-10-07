@@ -415,6 +415,7 @@ var infro = (function () {
       var on_change_func;
       
       var _filterables = filterables;
+      var cached_types = {};
       var _data = data;
       var _filters = {}
       var _metric = metric;
@@ -463,28 +464,33 @@ var infro = (function () {
       };
       
       this.scale = function(key){
+         if (cached_types[key]){
+            return get(cached_types[key], 'scale', 'null');
+         }
          return get(_filterables[key], 'scale', 'null');
       };
       
       this.type = function(key){
          if (! _filterables[key]){
-            /** look to see if there is continuous looking data.
-               cache that result
-               if data is continious, then also guess that the scale is linear
-            */
-            var num = 0.0;
-            var key_data = pull_out_field(_data, key);
-            key_data.forEach(function(n){
-               if (is_numeric(n)){
-                  num++;
+            if (! cached_types[key]) {
+               /** look to see if there is continuous looking data.
+                  cache that result
+                  if data is continious, then also guess that the scale is linear
+               */
+               var num = 0.0;
+               var key_data = pull_out_field(_data, key);
+               key_data.forEach(function(n){
+                  if (is_numeric(n)){
+                     num++;
+                  }
+               });
+               if ((num / key_data.length) > 0.8){
+                  cached_types[key] = {type: "continuous", scale: d3.scale.linear};
+               } else {
+                  cached_types[key] = {type: "discrete"};
                }
-            });
-            if ((num / key_data.length) > 0.8){
-               _filterables[key] = {type: "continuous", scale: d3.scale.linear};
-            } else {
-               _filterables[key] = {type: "discrete"};
             }
-
+            return cached_types[key].type;
          }
          return get(_filterables[key], 'type', 'discrete');
 
