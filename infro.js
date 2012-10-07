@@ -68,7 +68,12 @@ var infro = (function () {
       return result;
     };
   };
-       
+      
+
+   var is_numeric = function (n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+   }
+
    var is_function = function (function_to_check) {
       var get_type = {};
       return function_to_check && get_type.toString.call(function_to_check) === '[object Function]';
@@ -462,7 +467,27 @@ var infro = (function () {
       };
       
       this.type = function(key){
+         if (! _filterables[key]){
+            /** look to see if there is continuous looking data.
+               cache that result
+               if data is continious, then also guess that the scale is linear
+            */
+            num = 0.0;
+            key_data = pull_out_field(_data, key);
+            key_data.forEach(function(n){
+               if (is_numeric(n)){
+                  num++;
+               }
+            });
+            if ((num / key_data.length) > 0.8){
+               _filterables[key] = {type: "continuous", scale: d3.scale.linear};
+            } else {
+               _filterables[key] = {type: "discrete"};
+            }
+
+         }
          return get(_filterables[key], 'type', 'discrete');
+
       };
       
       var change = function(){
