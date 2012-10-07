@@ -945,7 +945,8 @@ var infro = (function () {
          .attr("src", "images/state-error.png") // TODO: use css
          .style("width", (filter_height / 2) +"px")
          .style("height", (filter_height / 2) +"px")
-         .style("left", filters_width-filter_height+"px")
+         .style("left", filters_width - ( filter_height *(3/4) ) + "px")
+         .style("top", filter_height *(1/4) + "px")
          .style("cursor", "pointer")
          .on("click", data_filter.del);
          
