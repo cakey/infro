@@ -965,10 +965,8 @@ var infro = (function () {
       var no_bins = 40;
       var bin_width = Math.floor(selection.width()/no_bins);
       
-      var element_type = svg_support?"svg":"div";
-      
       var histogram_groups = data_bind(selection,
-                                   element_type, "cont", function(key){
+                                   "svg", "cont", function(key){
             var filtered_dataset = data_filter.apply_upto(key, false);
             return [create_histogram(filtered_dataset, key, no_bins, bin_width, selection.height())];
          }
@@ -1158,10 +1156,8 @@ var infro = (function () {
       
       /* create a group for each filter_group, so we can bind the histogram stuff to it
        * to avoid having to recalculate it */
-      
-      var element_type = svg_support?"svg":"div";
             
-      var histogram_groups = data_bind(continuous_groups, element_type, "histo",function(key){
+      var histogram_groups = data_bind(continuous_groups, "svg", "histo",function(key){
             return [create_histogram(filtered_data, key, no_bins, bin_width, height)];
          })
             .style("width", group_width+"px")
