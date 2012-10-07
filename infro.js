@@ -585,7 +585,7 @@ var infro = (function () {
       };
       this.metrics = function(){
          return d3.keys(_filterables).filter(function(key){
-            return that.type(key) === "continuous" && that.is_aggregable(key);
+            return that.type(key) === "continuous";
          });
       };
    };   
