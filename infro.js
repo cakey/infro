@@ -1170,7 +1170,7 @@ var infro = (function () {
             .call(render_histo_and_overlay, no_bins, bin_width, false);
    };
    
-   var render_svg_histogram_groups = function(hist_gr, post){
+   var render_histogram_groups = function(hist_gr, post){
       var tick_size = get_font_size(hist_gr.width(), hist_gr.height(), "tick")
       
       var bar_graphs = data_bind(hist_gr, "g", "bg", arrentity)
@@ -1206,7 +1206,7 @@ var infro = (function () {
             .style("font-size",tick_size+"px");
    };
 
-   var render_svg_capture_overlays = function(histogram_groups){
+   var render_capture_overlays = function(histogram_groups){
       /* Initialize the brush component with pretty resize handles. */
       
           var gBrush = data_bind(histogram_groups, "g", "brush", arrentity)
@@ -1234,125 +1234,6 @@ var infro = (function () {
       }
 
    };
-
-   var render_div_histogram_groups = function(hist_gr, axis_on_top){ /* css */
-   
-      var tick_size = get_font_size(hist_gr.width(), hist_gr.height(), "tick")
-      
-      var bar_graphs = data_bind(hist_gr, "div", "bg", arrentity)
-      
-      var bars = data_bind(bar_graphs, "div", "histo_bar", function(d){
-         return d.histogram.map(function(bar){
-            return {bar:bar, xscale:d.xscale, yscale:d.yscale, bin_width:d.bin_width};
-         });
-      }) 
-         .style("width", function(d){return (d.bin_width-2)+"px";})
-         .style("height", function(d){return (hist_gr.height()-d.yscale(d.bar.y))+"px";})
-         .style("left", function(d,i){return (i*d.bin_width+1)+"px";})
-         .style("top", function(d){return ((d.yscale(d.bar.y)))+"px";});
-         
-         
-      /* create the axis */
-      var ticks = data_bind(bar_graphs, "div", "tick", function(d){
-         var no_ticks = 8;
-         if (data_filter.scale(d.filterable) === d3.time.scale){
-            var ticks = d.xscale.ticks(no_ticks)
-            var formatter = d.xscale.tickFormat(no_ticks);
-            return d3.range(ticks.length).map(function(tn){
-                  var x = ((tn/(ticks.length-0.5))*d.histogram.length)*d.bin_width;
-                  var value = (typeof ticks[tn]=== "undefined")?"":formatter(ticks[tn]);
-                  return {x:x, value:value};
-               });
-         }else{
-            return d3.range(no_ticks).map(function(tn){
-                  var x = ((tn/no_ticks)*d.histogram.length)*d.bin_width;
-                  var value = d.formatter(d.xscale.invert(x));
-                  return {x:x, value:value};
-               });
-        }
-      })
-         .style("left", function(d,i){
-            return d.x+"px";
-         })
-         .text(pluck("value"))
-         .style("font-size", 11+"px");
-         
-   };
-
-   var render_div_capture_overlays = function(histogram_groups, no_bins, bin_width){
-      var height = histogram_groups.height();
-   
-      /* so we only rerender what is necessary */
-      var capture_overlays = data_bind(histogram_groups, "div", "capture",
-         function(group){
-            return d3.range(no_bins).map(function(bin_no){
-               return { bin_no:bin_no, 
-                        filterable:group.filterable, 
-                        thresholds:[group.thresholds[bin_no],group.thresholds[bin_no+1]]
-               };
-            })
-         })
-            .style("left",function(d){return bin_width*d.bin_no+"px"})
-            .style("width", bin_width+1+"px") /* shrug */
-            .style("height", height+"px")
-            .style("cursor", "pointer")
-            .style("display", "block")
-            .classed("hover", function(bin){
-               /* if we are on the right histogram  */
-               if (current_bin !== null && bin.filterable === current_bin.filterable){
-                  /* if not selecting, then highlight current bin */
-                  if (current_down_bin === null){
-                     return (current_bin.bin_no === bin.bin_no);
-                     
-                  /* if selecting, highlight all bins in the right range */
-                  } else if (current_down_bin.filterable === bin.filterable){
-                     var lower_bin_no = d3.min([current_bin.bin_no, current_down_bin.bin_no]);
-                     var upper_bin_no= d3.max([current_bin.bin_no, current_down_bin.bin_no]);
-                     return  (bin.bin_no >= lower_bin_no && bin.bin_no <=upper_bin_no);
-                  }
-               }
-            
-            })
-            .classed("selected", function(bin){
-               /* if we have chosen a range for that filter, highlight it */
-               return (data_filter.match(bin.filterable, bin.thresholds[0]) &&
-                        data_filter.match(bin.filterable, bin.thresholds[1]));
-            })
-           .on("mouseover", function(bin){current_bin = bin; histogram_groups.call(render_capture_overlays, no_bins, bin_width); }) /*slow down in ie?*/
-            .on("click", function(bin){
-               if(current_down_bin === null){
-                  /* start selection */
-                  current_down_bin = bin;
-               }else if (current_down_bin.filterable === bin.filterable){
-                  /* end selection
-                   * take the lowest threshold and the highest thresholds */
-                  
-                  var thresholds = [current_down_bin.thresholds[0],
-                                    current_down_bin.thresholds[1],
-                                    bin.thresholds[0],
-                                    bin.thresholds[1]];
-
-                  var lowest = Math.floor(d3.min(thresholds))-1;
-                  var highest = Math.ceil(d3.max(thresholds));
-                 
-                  /* reset the current highlight */
-                  current_down_bin = null;
-                  current_bin = null;
-                  /* add the filter */
-                  data_filter.add(bin.filterable, [lowest, highest]);
-
-               }
-            })
-            /* stop the highlight resetting when moving off any bin... */
-            .on("mouseout", function(bin){current_bin = null;
-               if (!d3.event.stopPropagation){
-                  window.event.cancelBubble = true;
-               }else{
-                  d3.event.stopPropagation();
-               }
-            });
-   };
-
   
    var render_bar_graph_groups = function(scroll_group){
 
@@ -1790,11 +1671,6 @@ var infro = (function () {
       var tabs;
       var cached_rows = null;
       var options = new OptionsHidden(render_options);
-      
-      /* switch between svg and divs depending on browser */
-      var svg_support = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
-      var render_histogram_groups = svg_support?render_svg_histogram_groups:render_div_histogram_groups;
-      var render_capture_overlays = svg_support?render_svg_capture_overlays:render_div_capture_overlays;
       
    /* Start here */
    var init_visualisation = function(config){
