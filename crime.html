@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8" />
+      <title>Infro</title>
+      <script src="http://d3js.org/d3.v2.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/mootools-1.4.5.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/mootools-more-1.4.0.1.js"></script> 
+      <script src="https://raw.github.com/cakey/infro/master/chosen/chosen.js"></script>
+      <script src="https://raw.github.com/cakey/infro/master/infro.js"></script>
+      <link rel="stylesheet" href="infro.css" type="text/css" />
+      <link rel="stylesheet" href="chosen.css" type="text/css" />
+   </head>
+   <body>
+   <div id="visualisation"></div>
+   <script>
+   
+      infro.init({
+         root_div: "visualisation",
+         data: {
+            type: "csv",
+            url: "CrimeStatebyState.csv"
+         },
+         formatters: {},
+         unit: "Crimes",
+         topx: 5,
+         more_info_url: "http://en.wikipedia.org/wiki/{{{State}}}",
+         metrics:{},
+         filterables: {
+
+            "State":{},
+            "Type of Crime":{},
+            "Crime":{},
+            "Year":{},
+            "Count":{
+              type: "continuous",
+              scale: infro.scales.log
+            }
+      });
+   </script>
+   </body>
+</html>
