@@ -108,12 +108,16 @@ var infro = (function () {
    
    ["height", "width"].forEach(function(dim){
          /* returns the height or width value set for the selection, and removes 'px' */
-         d3.selection.prototype[dim] = function() {
-         try{
-            return Number(this.empty()?0:(this[0][0].style.getPropertyValue(dim).slice(0,-2)) );
-         } catch(e){
+      d3.selection.prototype[dim] = function() {
+         if (this.empty()){
             return 0;
          }
+         for (var sel=0; sel<this.length; sel++){
+            if (this[sel].length > 0){
+               return this[sel][0].style.getPropertyValue(dim).slice(0, -2);
+            }
+         }
+         return 0;
       };
    });
    
