@@ -214,7 +214,7 @@ var infro = (function () {
       if (units_sort !== null){
          filtered_rows_to_show.sort(function(a, b){
             if (type === continuous){ 
-               return units_sort_order(Number(a[units_sort]), Number(b[units_sort]);
+               return units_sort_order(Number(a[units_sort]), Number(b[units_sort]));
             } else {
                return units_sort_order(a[units_sort], b[units_sort]);
             }
