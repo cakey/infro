@@ -974,7 +974,6 @@ var infro = (function () {
 
    var render_continuous_post_filter_groups = function(selection){
       var no_bins = 40;
-      console.log(selection);
       var bin_width = Math.floor(selection.width()/no_bins);
       
       var histogram_groups = data_bind(selection,
