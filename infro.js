@@ -943,8 +943,8 @@ var infro = (function () {
    
       var delete_button = data_bind(filter_rows, "img", "del_but", arrentity)
          .attr("src", "images/state-error.png") // TODO: use css
-         .style("width", filter_height+"px")
-         .style("height", filter_height+"px")
+         .style("width", (filter_height / 2) +"px")
+         .style("height", (filter_height / 2) +"px")
          .style("left", filters_width-filter_height+"px")
          .style("cursor", "pointer")
          .on("click", data_filter.del);
@@ -1344,10 +1344,11 @@ var infro = (function () {
       var width = bar_groups.width();
       var height = bar_groups.height();
       var font_size = get_font_size(width, height, "bar_label");
-      var get_width = function(percentpair){return (((data_filter.aggregation()===d3.sum)?
-                                                               (percentpair.value/percentpair.total):
-                                                               (percentpair.value/percentpair.max))*width);
-                                                };
+      var get_width = function(percentpair){
+         return (((data_filter.aggregation()===d3.sum)?
+            (percentpair.value/percentpair.total):
+            (percentpair.value/percentpair.max))*width);
+      };
                                                 
       /* The bars. */
       var bar_rects = data_bind(bar_groups, "div", "discrete_bar", arrentity)
