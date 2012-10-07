@@ -1,6 +1,8 @@
 # Infro
 
-### Basic Demo: http://cakey.github.com/infro/
+### Basic Demo: 
+ * http://cakey.github.com/infro/ - example server request data
+ * http://cakey.github.com/infro/countries.html - human development data
 
 Infro is a Javascript library that uses the excellent D3 library to help drill into tabular data sets to find inconsistencies and anomalies.
 It provides an interface to filter on both discrete and continuous aspects of the data, while visualising metrics on that data.
