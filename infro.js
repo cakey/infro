@@ -206,12 +206,18 @@ var infro = (function () {
    
       var filtered_data = data_filter.apply();
 
+      var type = data_filter.type(units_sort)
+
       var filtered_rows_to_show = pull_out_fields(filtered_data, columns_to_show);
       
       /* sort the data */
       if (units_sort !== null){
          filtered_rows_to_show.sort(function(a, b){
-            return units_sort_order(a[units_sort], b[units_sort]);
+            if (type === continuous){ 
+               return units_sort_order(Number(a[units_sort]), Number(b[units_sort]);
+            } else {
+               return units_sort_order(a[units_sort], b[units_sort]);
+            }
          });
       }
 
