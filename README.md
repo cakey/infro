@@ -7,7 +7,7 @@
 Infro is a Javascript library that uses the excellent D3 library to help drill into tabular data sets to find inconsistencies and anomalies.
 It provides an interface to filter on both discrete and continuous aspects of the data, while visualising metrics on that data.
 
-Infro allows you to create your own metrics and formatters, and trys to expose as much of the styling as possible through css.
+Infro allows you to create your own metrics and formatters, and tries to expose as much of the styling as possible through css.
 
 It exposes both a filterable and a table view - the table view allows you to easily sort and search through the data, while the filterable view allows easy filtering and visualisation of the metrics.
 
